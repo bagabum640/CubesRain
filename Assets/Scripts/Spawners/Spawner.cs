@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -10,8 +9,6 @@ public class Spawner<TObject> : MonoBehaviour where TObject : MonoBehaviour, IOb
     [SerializeField] private TObject _prefab;
 
     protected ObjectPool<TObject> Pool;
-
-    public event Action<int,int,int> AmountChanged;
 
     public int CreatedAllTime { get; private set; } = 0;
     public int CountAll => Pool.CountAll;
@@ -36,15 +33,15 @@ public class Spawner<TObject> : MonoBehaviour where TObject : MonoBehaviour, IOb
 
     protected virtual void SetUp(TObject @object)
     {
-        @object.IsDestroyed += Release;
+        @object.Destroyed += Release;
         @object.gameObject.SetActive(true);
     }
 
     protected void ResetObject(TObject @object)
     {
-        @object.IsDestroyed -= Release;
+        @object.Destroyed -= Release;
         @object.gameObject.SetActive(false);
-        @object.Reset();
+        @object.ResetToDefault();
     }
 
     protected virtual void Release(TObject @object) => Pool.Release(@object);

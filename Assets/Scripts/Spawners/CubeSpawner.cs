@@ -8,13 +8,11 @@ public class CubeSpawner : Spawner<Cube>
     [SerializeField] private Vector3 _maxPosition;
     [SerializeField] private float _repeatRate;
 
-    readonly private bool _isWorking = true;
-
     private void Start() => StartCoroutine(CubeSpawn());
 
     private IEnumerator CubeSpawn()
     {
-        while (_isWorking)
+        while (enabled)
         {
             Spawn(GetSpawnPosition());
             yield return new WaitForSeconds(_repeatRate);
@@ -23,7 +21,7 @@ public class CubeSpawner : Spawner<Cube>
 
     protected override void SetUp(Cube cube)
     {
-        cube.IsDestroyed += Release;
+        cube.Destroyed += Release;
         cube.gameObject.SetActive(true);
     }
 

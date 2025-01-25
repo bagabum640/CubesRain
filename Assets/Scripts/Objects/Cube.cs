@@ -10,7 +10,7 @@ public class Cube : MonoBehaviour, IObject<Cube>
     private Rigidbody _rigidbody;
     private bool _isActive;
 
-    public event Action<Cube> IsDestroyed;
+    public event Action<Cube> Destroyed;
 
     private void Awake()
     {
@@ -19,7 +19,7 @@ public class Cube : MonoBehaviour, IObject<Cube>
     }
 
     private void Start() =>
-        Reset();
+        ResetToDefault();
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -39,10 +39,10 @@ public class Cube : MonoBehaviour, IObject<Cube>
 
         yield return new WaitForSeconds(delay);
 
-        IsDestroyed?.Invoke(this);
+        Destroyed?.Invoke(this);
     }
 
-    public void Reset()
+    public void ResetToDefault()
     {
         _isActive = false;
         _cubeMesh.material.color = Color.white;

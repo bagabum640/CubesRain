@@ -13,7 +13,7 @@ public class Bomb : MonoBehaviour, IObject<Bomb>
 
     private readonly float _defaultAlpha = 1f;
 
-    public event Action<Bomb> IsDestroyed;
+    public event Action<Bomb> Destroyed;
 
     private void Awake()
     {
@@ -32,7 +32,6 @@ public class Bomb : MonoBehaviour, IObject<Bomb>
         int _minLifeTime = 2;
         int _maxLifeTime = 6;
         int delay = UnityEngine.Random.Range(_minLifeTime, _maxLifeTime);
-        float alpha = _defaultAlpha;
         float timeRemaining = delay;
 
         while (timeRemaining > 0)
@@ -45,7 +44,7 @@ public class Bomb : MonoBehaviour, IObject<Bomb>
         }
 
         _explosion.Explode();
-        IsDestroyed?.Invoke(this);
+        Destroyed?.Invoke(this);
     }
 
     private void SetAlpha(float alpha)
@@ -55,7 +54,7 @@ public class Bomb : MonoBehaviour, IObject<Bomb>
         _renderer.material.color = color;
     }
 
-    public void Reset()
+    public void ResetToDefault()
     {
         SetAlpha(_defaultAlpha);
         _rigidbody.velocity = Vector3.zero;

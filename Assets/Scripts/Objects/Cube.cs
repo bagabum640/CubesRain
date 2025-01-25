@@ -4,13 +4,13 @@ using UnityEngine;
 
 [RequireComponent(typeof(MeshRenderer),
                   typeof(Rigidbody))]
-public class Cube : MonoBehaviour
+public class Cube : MonoBehaviour, IObject<Cube>
 {
     private MeshRenderer _cubeMesh;
     private Rigidbody _rigidbody;
     private bool _isActive;
 
-    public event Action<Cube> OnTouched;
+    public event Action<Cube> IsDestroyed;
 
     private void Awake()
     {
@@ -18,8 +18,9 @@ public class Cube : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
     }
 
-    private void Start() => Reset();
-            
+    private void Start() =>
+        Reset();
+
     private void OnCollisionEnter(Collision collision)
     {
         if (_isActive == false && collision.gameObject.TryGetComponent<ColorChanger>(out ColorChanger colorChanger))
@@ -33,12 +34,12 @@ public class Cube : MonoBehaviour
     private IEnumerator WaitForRelease()
     {
         int _minLifeTime = 2;
-        int _maxLifeTime = 5;
+        int _maxLifeTime = 6;
         int delay = UnityEngine.Random.Range(_minLifeTime, _maxLifeTime);
 
         yield return new WaitForSeconds(delay);
 
-        OnTouched?.Invoke(this);
+        IsDestroyed?.Invoke(this);
     }
 
     public void Reset()

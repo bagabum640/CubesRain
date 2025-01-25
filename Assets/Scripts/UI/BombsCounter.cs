@@ -1,0 +1,1 @@
+public class BombsCounter : Counter<Bomb> {}

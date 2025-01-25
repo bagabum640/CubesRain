@@ -22,10 +22,8 @@ public class Bomb : MonoBehaviour, IObject<Bomb>
         _explosion = GetComponent<Explosion>();
     }
 
-    public void OnEnable()
-    {
-        StartCoroutine(SmoothDisappearance());
-    }
+    public void OnEnable() =>   
+        StartCoroutine(SmoothDisappearance());    
 
     private IEnumerator SmoothDisappearance()
     {
@@ -47,18 +45,18 @@ public class Bomb : MonoBehaviour, IObject<Bomb>
         Destroyed?.Invoke(this);
     }
 
-    private void SetAlpha(float alpha)
-    {
-        Color color = _renderer.material.color;
-        color.a = alpha;
-        _renderer.material.color = color;
-    }
-
     public void ResetToDefault()
     {
         SetAlpha(_defaultAlpha);
         _rigidbody.velocity = Vector3.zero;
         _rigidbody.angularVelocity = Vector3.zero;
         transform.rotation = Quaternion.identity;
+    }
+
+    private void SetAlpha(float alpha)
+    {
+        Color color = _renderer.material.color;
+        color.a = alpha;
+        _renderer.material.color = color;
     }
 }

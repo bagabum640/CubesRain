@@ -8,7 +8,8 @@ public class CubeSpawner : Spawner<Cube>
     [SerializeField] private Vector3 _maxPosition;
     [SerializeField] private float _repeatRate;
 
-    private void Start() => StartCoroutine(CubeSpawn());
+    private void Start() =>
+        StartCoroutine(CubeSpawn());
 
     private IEnumerator CubeSpawn()
     {

@@ -2,11 +2,12 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(MeshRenderer),
-                  typeof(Rigidbody),
-                  typeof(Explosion))]
+[RequireComponent(typeof(Rigidbody),
+                  typeof(Explosion),
+                  typeof(Renderer))]
 public class Bomb : MonoBehaviour, IObject<Bomb>
 {
+    private TransparencyChanger _transparencyChanger;
     private Renderer _renderer;
     private Rigidbody _rigidbody;
     private Explosion _explosion;
@@ -20,10 +21,12 @@ public class Bomb : MonoBehaviour, IObject<Bomb>
         _renderer = GetComponent<Renderer>();
         _rigidbody = GetComponent<Rigidbody>();
         _explosion = GetComponent<Explosion>();
+
+        _transparencyChanger = new(_renderer);
     }
 
-    public void OnEnable() =>   
-        StartCoroutine(SmoothDisappearance());    
+    public void OnEnable() =>
+        StartCoroutine(SmoothDisappearance());
 
     private IEnumerator SmoothDisappearance()
     {
@@ -34,7 +37,7 @@ public class Bomb : MonoBehaviour, IObject<Bomb>
 
         while (timeRemaining > 0)
         {
-            SetAlpha(timeRemaining / delay);
+            _transparencyChanger.SetAlpha(timeRemaining / delay);
 
             yield return null;
 
@@ -47,16 +50,9 @@ public class Bomb : MonoBehaviour, IObject<Bomb>
 
     public void ResetToDefault()
     {
-        SetAlpha(_defaultAlpha);
+        _transparencyChanger.SetAlpha(_defaultAlpha);
         _rigidbody.velocity = Vector3.zero;
         _rigidbody.angularVelocity = Vector3.zero;
         transform.rotation = Quaternion.identity;
-    }
-
-    private void SetAlpha(float alpha)
-    {
-        Color color = _renderer.material.color;
-        color.a = alpha;
-        _renderer.material.color = color;
     }
 }

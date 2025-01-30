@@ -26,7 +26,7 @@ public class Spawner<TObject> : MonoBehaviour where TObject : MonoBehaviour, IOb
 
     public void Spawn(Vector3 spawnPosition)
     {
-        TObject @object = Pool.Get();    
+        TObject @object = Pool.Get();
         @object.transform.position = spawnPosition;
         CreatedAllTime++;
     }
@@ -44,5 +44,6 @@ public class Spawner<TObject> : MonoBehaviour where TObject : MonoBehaviour, IOb
         @object.ResetToDefault();
     }
 
-    protected virtual void Release(TObject @object) => Pool.Release(@object);
+    protected virtual void Release(TObject @object) =>
+        Pool.Release(@object);
 }

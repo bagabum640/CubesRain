@@ -31,12 +31,6 @@ public class Spawner<TObject> : MonoBehaviour where TObject : MonoBehaviour, IOb
         CreatedAllTime++;
     }
 
-    protected virtual void SetUp(TObject @object)
-    {
-        @object.Destroyed += Release;
-        @object.gameObject.SetActive(true);
-    }
-
     protected void ResetObject(TObject @object)
     {
         @object.Destroyed -= Release;
@@ -46,4 +40,10 @@ public class Spawner<TObject> : MonoBehaviour where TObject : MonoBehaviour, IOb
 
     protected virtual void Release(TObject @object) =>
         Pool.Release(@object);
+
+    private void SetUp(TObject @object)
+    {
+        @object.Destroyed += Release;
+        @object.gameObject.SetActive(true);
+    }
 }

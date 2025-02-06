@@ -9,21 +9,17 @@ public class CubeSpawner : Spawner<Cube>
     [SerializeField] private float _repeatRate;
 
     private void Start() =>
-        StartCoroutine(CubeSpawn());
+        StartCoroutine(SpawnCube());
 
-    private IEnumerator CubeSpawn()
+    private IEnumerator SpawnCube()
     {
+        WaitForSeconds wait = new(_repeatRate);
+
         while (enabled)
         {
             Spawn(GetSpawnPosition());
-            yield return new WaitForSeconds(_repeatRate);
+            yield return wait;
         }
-    }
-
-    protected override void SetUp(Cube cube)
-    {
-        cube.Destroyed += Release;
-        cube.gameObject.SetActive(true);
     }
 
     protected override void Release(Cube cube)

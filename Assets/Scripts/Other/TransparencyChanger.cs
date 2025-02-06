@@ -1,15 +1,38 @@
+using System.Collections;
 using UnityEngine;
 
-public class TransparencyChanger
-{ 
-    private readonly Renderer _renderer;
+public class TransparencyChanger : MonoBehaviour
+{
+    private const float DefaultAlpha = 1f;
 
-    public TransparencyChanger(Renderer renderer)
+    [SerializeField] private MeshRenderer _renderer;
+
+    private float _delay;
+
+    private void OnEnable() =>
+        StartCoroutine(SmoothDisappearance());
+
+    private IEnumerator SmoothDisappearance()
     {
-        _renderer = renderer;
+        float timeRemaining = _delay;
+
+        while (timeRemaining > 0)
+        {
+            SetAlpha(timeRemaining / _delay);
+
+            timeRemaining -= Time.deltaTime;
+
+            yield return null;
+        }
     }
 
-    public void SetAlpha(float alpha)
+    public void SetDelay(float delay) =>
+        _delay = delay;
+
+    public void ResetAlpha() =>
+        SetAlpha(DefaultAlpha);
+
+    private void SetAlpha(float alpha)
     {
         Color color = _renderer.material.color;
         color.a = alpha;

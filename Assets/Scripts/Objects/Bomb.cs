@@ -4,44 +4,39 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody),
                   typeof(Explosion),
-                  typeof(Renderer))]
+                  typeof(TransparencyChanger))]
 public class Bomb : MonoBehaviour, IObject<Bomb>
 {
-    private TransparencyChanger _transparencyChanger;
-    private Renderer _renderer;
     private Rigidbody _rigidbody;
     private Explosion _explosion;
-
-    private readonly float _defaultAlpha = 1f;
-
+    private TransparencyChanger _transparencyChanger;
+ 
     public event Action<Bomb> Destroyed;
 
     private void Awake()
     {
-        _renderer = GetComponent<Renderer>();
         _rigidbody = GetComponent<Rigidbody>();
         _explosion = GetComponent<Explosion>();
-
-        _transparencyChanger = new(_renderer);
+        _transparencyChanger = GetComponent<TransparencyChanger>();
     }
 
     public void OnEnable() =>
-        StartCoroutine(SmoothDisappearance());
+        StartCoroutine(TriggerExplosion());
 
-    private IEnumerator SmoothDisappearance()
+    private IEnumerator TriggerExplosion()
     {
         int _minLifeTime = 2;
         int _maxLifeTime = 6;
         int delay = UnityEngine.Random.Range(_minLifeTime, _maxLifeTime);
         float timeRemaining = delay;
 
+        _transparencyChanger.SetDelay(delay);
+
         while (timeRemaining > 0)
         {
-            _transparencyChanger.SetAlpha(timeRemaining / delay);
+            timeRemaining -= Time.deltaTime;
 
             yield return null;
-
-            timeRemaining -= Time.deltaTime;
         }
 
         _explosion.Explode();
@@ -50,7 +45,7 @@ public class Bomb : MonoBehaviour, IObject<Bomb>
 
     public void ResetToDefault()
     {
-        _transparencyChanger.SetAlpha(_defaultAlpha);
+        _transparencyChanger.ResetAlpha();
         _rigidbody.velocity = Vector3.zero;
         _rigidbody.angularVelocity = Vector3.zero;
         transform.rotation = Quaternion.identity;
